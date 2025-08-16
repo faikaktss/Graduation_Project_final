@@ -1,98 +1,248 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛒 E-Ticaret Backend Projesi
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Bu proje, **TypeScript + NestJS + Express.js + PostgreSQL + Prisma ORM** teknolojileri kullanılarak geliştirilmiş bir e-ticaret backend sistemidir.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Amacımız, adım adım genişletilen bir e-ticaret altyapısı geliştirmek ve temel üyelik, ürün, kategori, sepet, sipariş ve stok yönetimi özelliklerini desteklemektir.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 Kullanılan Teknolojiler
 
-## Project setup
+* **Dil:** TypeScript
+* **Framework:** NestJS (Express.js tabanlı)
+* **Veri Tabanı:** PostgreSQL
+* **ORM:** Prisma ORM
+* **Kimlik Doğrulama:** Passport.js + JWT (Refresh Token Rotation destekli)
 
-```bash
-$ npm install
+---
+
+## 📂 Proje Kurulumu
+
+1. Projeyi klonlayın:
+
+   ```bash
+   git clone https://github.com/kullanici/ecommerce-backend.git
+   cd ecommerce-backend
+   ```
+
+2. Gerekli bağımlılıkları yükleyin:
+
+   ```bash
+   npm install
+   ```
+
+3. `.env` dosyasını oluşturun:
+
+   ```env
+   DATABASE_URL="postgresql://kullanici:sifre@localhost:5432/ecommerce_db?schema=public"
+   JWT_SECRET="super-secret-key"
+   JWT_REFRESH_SECRET="super-refresh-secret"
+   ```
+
+4. Prisma ile veri tabanı tablolarını oluşturun:
+
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+5. Uygulamayı başlatın:
+
+   ```bash
+   npm run start:dev
+   ```
+
+API, varsayılan olarak `http://localhost:3000/api` üzerinden çalışacaktır.
+
+---
+
+## 📑 Veri Tabanı Yapısı
+
+### Kullanıcılar (users)
+
+* id
+* first\_name
+* last\_name
+* full\_name
+* username
+* email
+* password (hashlenmiş)
+* role (ADMIN / MODERATOR / USER) *(varsayılan: USER)*
+* created\_at
+* updated\_at
+
+### Kategoriler (categories)
+
+* id
+* name
+* slug
+* order
+* created\_at
+* updated\_at
+
+### Ürünler (products)
+
+* id
+* category\_id
+* name
+* slug
+* short\_description
+* long\_description
+* price
+* stock\_quantity
+* primary\_photo\_url
+* comment\_count
+* average\_rating
+* created\_at
+* updated\_at
+
+### Ürün Fotoğrafları (product\_photos)
+
+* id
+* product\_id
+* is\_primary (boolean)
+* url
+* size
+* order
+* created\_at
+* updated\_at
+
+### Ürün Yorumları (product\_comments)
+
+* id
+* user\_id
+* product\_id
+* title (nullable)
+* content (nullable)
+* rating (1-5)
+* created\_at
+* updated\_at
+
+### Sepet (cart\_items)
+
+* id
+* user\_id
+* product\_id
+* quantity
+* created\_at
+* updated\_at
+
+### Siparişler (orders)
+
+* id
+* user\_id
+* total\_price
+* status (PENDING, PAID, SHIPPED, DELIVERED, CANCELLED)
+* created\_at
+* updated\_at
+
+### Sipariş Kalemleri (order\_items)
+
+* id
+* order\_id
+* product\_id
+* quantity
+* unit\_price
+* created\_at
+* updated\_at
+
+---
+
+## 📌 API Endpointleri
+
+Tüm endpointlerin başında `/api` prefix’i bulunur.
+
+### 🔑 Auth
+
+* **POST** `/api/auth/register` → Yeni kullanıcı kaydı
+* **POST** `/api/auth/login` → Kullanıcı girişi
+* **GET** `/api/auth/me` → Mevcut kullanıcı bilgisi
+* **POST** `/api/auth/logout` → Çıkış
+* **POST** `/api/auth/logout-all` → Tüm oturumlardan çıkış
+
+### 👤 Kullanıcılar
+
+* **GET** `/api/users` → Kullanıcı listeleme
+* **GET** `/api/users/:id` → Kullanıcı görüntüleme
+* **PATCH** `/api/users/:id` → Kullanıcı güncelleme
+
+### 🏷️ Kategoriler
+
+* **POST** `/api/categories` → Kategori oluşturma
+* **GET** `/api/categories` → Kategori listeleme
+* **GET** `/api/categories/:id` → Kategori görüntüleme
+* **PATCH** `/api/categories/:id` → Kategori güncelleme
+* **DELETE** `/api/categories/:id` → Kategori silme
+
+### 📦 Ürünler
+
+* **POST** `/api/products` → Ürün oluşturma
+* **GET** `/api/products` → Ürün listeleme (filtreleme & sıralama destekli)
+* **GET** `/api/products/:id` → Ürün görüntüleme
+* **PATCH** `/api/products/:id` → Ürün güncelleme
+* **DELETE** `/api/products/:id` → Ürün silme
+
+### 🖼️ Ürün Fotoğrafları
+
+* **POST** `/api/product-photos` → Ürün fotoğrafı ekleme
+* **PATCH** `/api/product-photos/:id` → Fotoğraf güncelleme (sıra, birincil)
+* **DELETE** `/api/product-photos/:id` → Fotoğraf silme
+
+### 💬 Ürün Yorumları
+
+* **POST** `/api/comments` → Yorum ekleme
+* **GET** `/api/comments` → Yorum listeleme (product\_id & rating filtreli)
+* **GET** `/api/comments/:id` → Yorum görüntüleme
+* **PATCH** `/api/comments/:id` → Yorum güncelleme
+* **DELETE** `/api/comments/:id` → Yorum silme
+
+### 🛒 Sepet
+
+* **POST** `/api/cart-items` → Sepete ürün ekleme
+* **GET** `/api/cart-items` → Sepeti listeleme
+* **PATCH** `/api/cart-items/:id` → Sepeti güncelleme
+* **DELETE** `/api/cart-items/:id` → Sepetten ürün silme
+* **DELETE** `/api/cart-items` → Sepeti temizleme
+
+### 📦 Siparişler
+
+* **POST** `/api/orders` → Sipariş oluşturma (sepet → sipariş dönüşümü)
+* **GET** `/api/orders` → Sipariş listeleme
+* **GET** `/api/orders/:id` → Sipariş görüntüleme
+* **PATCH** `/api/orders/:id` → Sipariş güncelleme (status)
+
+---
+
+## 🔍 Ürün Filtreleme & Sıralama
+
+Ürünler listelenirken query string ile filtreleme ve sıralama yapılabilir:
+
+* **Filtreleme:**
+
+  * `category_id`
+  * `min_price`, `max_price`
+  * `min_rating`
+
+* **Sıralama:**
+
+  * `sort=price_asc`
+  * `sort=price_desc`
+  * `sort=rating_desc`
+  * `sort=newest`
+
+Örnek:
+
+```http
+GET /api/products?category_id=2&min_price=100&max_price=500&sort=price_asc
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 🔮 Gelecek Aşamalar
 
-# watch mode
-$ npm run start:dev
+* Kullanıcı rollerine göre **yetkilendirme** kurallarının eklenmesi
+* Ödeme entegrasyonu
+* Ürün fotoğrafları için **responsive varyantlar**
+* Admin paneli için ek API’ler
 
-# production mode
-$ npm run start:prod
-```
+---
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
