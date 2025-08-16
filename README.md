@@ -1,235 +1,220 @@
 # 🛒 E-Ticaret Backend Projesi
 
-Bu proje, **TypeScript + NestJS + Express.js + PostgreSQL + Prisma ORM** teknolojileri kullanılarak geliştirilmiş bir e-ticaret backend sistemidir.
+Bu proje, **TypeScript, NestJS, Express.js, PostgreSQL ve Prisma ORM** kullanılarak geliştirilmiş modüler ve genişletilebilir bir **E-Ticaret Backend API**’dir.
 
-Amacımız, adım adım genişletilen bir e-ticaret altyapısı geliştirmek ve temel üyelik, ürün, kategori, sepet, sipariş ve stok yönetimi özelliklerini desteklemektir.
-
----
-
-## 🚀 Kullanılan Teknolojiler
-
-* **Dil:** TypeScript
-* **Framework:** NestJS (Express.js tabanlı)
-* **Veri Tabanı:** PostgreSQL
-* **ORM:** Prisma ORM
-* **Kimlik Doğrulama:** Passport.js + JWT (Refresh Token Rotation destekli)
+Projenin amacı, adım adım geliştirilip büyütülebilecek bir altyapı sunarak **kimlik doğrulama, kullanıcı yönetimi, ürün-kategori sistemi, sepet ve sipariş yönetimi, stok takibi** gibi temel e-ticaret özelliklerini sağlamaktır.
 
 ---
 
-## 📂 Proje Kurulumu
+## 📌 Özellikler
 
-1. Projeyi klonlayın:
+* JWT tabanlı kimlik doğrulama (refresh token rotation desteğiyle)
+* Kullanıcı rolleri (ADMIN, MODERATOR, USER)
+* Kategori ve ürün yönetimi
+* Ürün fotoğraf sistemi (sıra ve birincil fotoğraf desteğiyle)
+* Ürün yorum sistemi
+* Sepet yönetimi (CRUD işlemleri)
+* Sipariş yönetimi (sipariş kalemleri, durum yönetimi)
+* Stok yönetimi
+* Gelişmiş ürün filtreleme ve sıralama desteği
+
+---
+
+## 🚀 Teknoloji Yığını
+
+| Katman      | Teknoloji                       |
+| ----------- | ------------------------------- |
+| Dil         | **TypeScript**                  |
+| Framework   | **NestJS (Express.js tabanlı)** |
+| Veri Tabanı | **PostgreSQL**                  |
+| ORM         | **Prisma ORM**                  |
+| Auth        | **Passport.js + JWT**           |
+
+---
+
+## ⚙️ Kurulum
+
+1. **Depoyu klonlayın:**
 
    ```bash
    git clone https://github.com/kullanici/ecommerce-backend.git
    cd ecommerce-backend
    ```
 
-2. Gerekli bağımlılıkları yükleyin:
+2. **Bağımlılıkları yükleyin:**
 
    ```bash
    npm install
    ```
 
-3. `.env` dosyasını oluşturun:
+3. **Çevresel değişkenleri ayarlayın:**
+   Ana dizine `.env` dosyası oluşturun:
 
    ```env
-   DATABASE_URL="postgresql://kullanici:sifre@localhost:5432/ecommerce_db?schema=public"
+   DATABASE_URL="postgresql://user:password@localhost:5432/ecommerce_db?schema=public"
    JWT_SECRET="super-secret-key"
    JWT_REFRESH_SECRET="super-refresh-secret"
    ```
 
-4. Prisma ile veri tabanı tablolarını oluşturun:
+4. **Prisma ile veri tabanı tablolarını oluşturun:**
 
    ```bash
    npx prisma migrate dev --name init
    ```
 
-5. Uygulamayı başlatın:
+5. **Sunucuyu çalıştırın:**
 
    ```bash
    npm run start:dev
    ```
 
-API, varsayılan olarak `http://localhost:3000/api` üzerinden çalışacaktır.
+API varsayılan olarak: `http://localhost:3000/api` adresinde çalışır.
 
 ---
 
-## 📑 Veri Tabanı Yapısı
+## 🗂️ Veri Tabanı Yapısı
 
-### Kullanıcılar (users)
+### Kullanıcılar (`users`)
 
-* id
-* first\_name
-* last\_name
-* full\_name
-* username
-* email
-* password (hashlenmiş)
-* role (ADMIN / MODERATOR / USER) *(varsayılan: USER)*
-* created\_at
-* updated\_at
+* `id`
+* `first_name`, `last_name`, `full_name`
+* `username`
+* `email`
+* `password` (hash)
+* `role` *(USER, ADMIN, MODERATOR)*
+* `created_at`, `updated_at`
 
-### Kategoriler (categories)
+### Kategoriler (`categories`)
 
-* id
-* name
-* slug
-* order
-* created\_at
-* updated\_at
+* `id`, `name`, `slug`, `order`
+* `created_at`, `updated_at`
 
-### Ürünler (products)
+### Ürünler (`products`)
 
-* id
-* category\_id
-* name
-* slug
-* short\_description
-* long\_description
-* price
-* stock\_quantity
-* primary\_photo\_url
-* comment\_count
-* average\_rating
-* created\_at
-* updated\_at
+* `id`, `category_id`
+* `name`, `slug`
+* `short_description`, `long_description`
+* `price`, `stock_quantity`
+* `primary_photo_url`
+* `comment_count`, `average_rating`
+* `created_at`, `updated_at`
 
-### Ürün Fotoğrafları (product\_photos)
+### Ürün Fotoğrafları (`product_photos`)
 
-* id
-* product\_id
-* is\_primary (boolean)
-* url
-* size
-* order
-* created\_at
-* updated\_at
+* `id`, `product_id`
+* `is_primary`
+* `url`, `size`, `order`
+* `created_at`, `updated_at`
 
-### Ürün Yorumları (product\_comments)
+### Ürün Yorumları (`product_comments`)
 
-* id
-* user\_id
-* product\_id
-* title (nullable)
-* content (nullable)
-* rating (1-5)
-* created\_at
-* updated\_at
+* `id`, `user_id`, `product_id`
+* `title`, `content`
+* `rating (1-5)`
+* `created_at`, `updated_at`
 
-### Sepet (cart\_items)
+### Sepet (`cart_items`)
 
-* id
-* user\_id
-* product\_id
-* quantity
-* created\_at
-* updated\_at
+* `id`, `user_id`, `product_id`
+* `quantity`
+* `created_at`, `updated_at`
 
-### Siparişler (orders)
+### Siparişler (`orders`)
 
-* id
-* user\_id
-* total\_price
-* status (PENDING, PAID, SHIPPED, DELIVERED, CANCELLED)
-* created\_at
-* updated\_at
+* `id`, `user_id`
+* `total_price`
+* `status` *(PENDING, PAID, SHIPPED, DELIVERED, CANCELLED)*
+* `created_at`, `updated_at`
 
-### Sipariş Kalemleri (order\_items)
+### Sipariş Kalemleri (`order_items`)
 
-* id
-* order\_id
-* product\_id
-* quantity
-* unit\_price
-* created\_at
-* updated\_at
+* `id`, `order_id`, `product_id`
+* `quantity`, `unit_price`
+* `created_at`, `updated_at`
 
 ---
 
-## 📌 API Endpointleri
+## 📑 API Endpointleri
 
-Tüm endpointlerin başında `/api` prefix’i bulunur.
+### 🔐 Auth
 
-### 🔑 Auth
-
-* **POST** `/api/auth/register` → Yeni kullanıcı kaydı
-* **POST** `/api/auth/login` → Kullanıcı girişi
-* **GET** `/api/auth/me` → Mevcut kullanıcı bilgisi
-* **POST** `/api/auth/logout` → Çıkış
-* **POST** `/api/auth/logout-all` → Tüm oturumlardan çıkış
+* `POST /api/auth/register` → Yeni kullanıcı kaydı
+* `POST /api/auth/login` → Kullanıcı girişi
+* `GET /api/auth/me` → Mevcut kullanıcı bilgisi
+* `POST /api/auth/logout` → Oturum kapatma
+* `POST /api/auth/logout-all` → Tüm oturumları sonlandırma
 
 ### 👤 Kullanıcılar
 
-* **GET** `/api/users` → Kullanıcı listeleme
-* **GET** `/api/users/:id` → Kullanıcı görüntüleme
-* **PATCH** `/api/users/:id` → Kullanıcı güncelleme
+* `GET /api/users` → Kullanıcı listeleme
+* `GET /api/users/:id` → Kullanıcı görüntüleme
+* `PATCH /api/users/:id` → Kullanıcı güncelleme
 
 ### 🏷️ Kategoriler
 
-* **POST** `/api/categories` → Kategori oluşturma
-* **GET** `/api/categories` → Kategori listeleme
-* **GET** `/api/categories/:id` → Kategori görüntüleme
-* **PATCH** `/api/categories/:id` → Kategori güncelleme
-* **DELETE** `/api/categories/:id` → Kategori silme
+* `POST /api/categories` → Kategori oluşturma
+* `GET /api/categories` → Kategori listeleme
+* `GET /api/categories/:id` → Kategori görüntüleme
+* `PATCH /api/categories/:id` → Kategori güncelleme
+* `DELETE /api/categories/:id` → Kategori silme
 
 ### 📦 Ürünler
 
-* **POST** `/api/products` → Ürün oluşturma
-* **GET** `/api/products` → Ürün listeleme (filtreleme & sıralama destekli)
-* **GET** `/api/products/:id` → Ürün görüntüleme
-* **PATCH** `/api/products/:id` → Ürün güncelleme
-* **DELETE** `/api/products/:id` → Ürün silme
+* `POST /api/products` → Ürün oluşturma
+* `GET /api/products` → Ürün listeleme *(filtreleme & sıralama destekli)*
+* `GET /api/products/:id` → Ürün görüntüleme
+* `PATCH /api/products/:id` → Ürün güncelleme
+* `DELETE /api/products/:id` → Ürün silme
 
 ### 🖼️ Ürün Fotoğrafları
 
-* **POST** `/api/product-photos` → Ürün fotoğrafı ekleme
-* **PATCH** `/api/product-photos/:id` → Fotoğraf güncelleme (sıra, birincil)
-* **DELETE** `/api/product-photos/:id` → Fotoğraf silme
+* `POST /api/product-photos` → Fotoğraf ekleme
+* `PATCH /api/product-photos/:id` → Fotoğraf güncelleme (sıra, birincil)
+* `DELETE /api/product-photos/:id` → Fotoğraf silme
 
-### 💬 Ürün Yorumları
+### 💬 Yorumlar
 
-* **POST** `/api/comments` → Yorum ekleme
-* **GET** `/api/comments` → Yorum listeleme (product\_id & rating filtreli)
-* **GET** `/api/comments/:id` → Yorum görüntüleme
-* **PATCH** `/api/comments/:id` → Yorum güncelleme
-* **DELETE** `/api/comments/:id` → Yorum silme
+* `POST /api/comments` → Yorum ekleme
+* `GET /api/comments` → Yorum listeleme *(product\_id & rating filtreli)*
+* `GET /api/comments/:id` → Yorum görüntüleme
+* `PATCH /api/comments/:id` → Yorum güncelleme
+* `DELETE /api/comments/:id` → Yorum silme
 
 ### 🛒 Sepet
 
-* **POST** `/api/cart-items` → Sepete ürün ekleme
-* **GET** `/api/cart-items` → Sepeti listeleme
-* **PATCH** `/api/cart-items/:id` → Sepeti güncelleme
-* **DELETE** `/api/cart-items/:id` → Sepetten ürün silme
-* **DELETE** `/api/cart-items` → Sepeti temizleme
+* `POST /api/cart-items` → Sepete ürün ekleme
+* `GET /api/cart-items` → Sepeti listeleme
+* `PATCH /api/cart-items/:id` → Ürün miktarı güncelleme
+* `DELETE /api/cart-items/:id` → Sepetten ürün silme
+* `DELETE /api/cart-items` → Sepeti temizleme
 
 ### 📦 Siparişler
 
-* **POST** `/api/orders` → Sipariş oluşturma (sepet → sipariş dönüşümü)
-* **GET** `/api/orders` → Sipariş listeleme
-* **GET** `/api/orders/:id` → Sipariş görüntüleme
-* **PATCH** `/api/orders/:id` → Sipariş güncelleme (status)
+* `POST /api/orders` → Sepeti siparişe dönüştürme
+* `GET /api/orders` → Sipariş listeleme
+* `GET /api/orders/:id` → Sipariş görüntüleme
+* `PATCH /api/orders/:id` → Sipariş güncelleme (status)
 
 ---
 
-## 🔍 Ürün Filtreleme & Sıralama
+## 🔍 Filtreleme & Sıralama
 
-Ürünler listelenirken query string ile filtreleme ve sıralama yapılabilir:
+Ürünler, query string parametreleriyle filtrelenebilir ve sıralanabilir.
 
-* **Filtreleme:**
+### Filtreleme Parametreleri
 
-  * `category_id`
-  * `min_price`, `max_price`
-  * `min_rating`
+* `category_id`
+* `min_price`, `max_price`
+* `min_rating`
 
-* **Sıralama:**
+### Sıralama Parametreleri
 
-  * `sort=price_asc`
-  * `sort=price_desc`
-  * `sort=rating_desc`
-  * `sort=newest`
+* `sort=price_asc` → En ucuzdan pahalıya
+* `sort=price_desc` → En pahalısından ucuza
+* `sort=rating_desc` → En yüksek puanlıdan düşük puanlıya
+* `sort=newest` → En yeni ürünlerden eskiye
 
-Örnek:
+**Örnek:**
 
 ```http
 GET /api/products?category_id=2&min_price=100&max_price=500&sort=price_asc
@@ -239,10 +224,13 @@ GET /api/products?category_id=2&min_price=100&max_price=500&sort=price_asc
 
 ## 🔮 Gelecek Aşamalar
 
-* Kullanıcı rollerine göre **yetkilendirme** kurallarının eklenmesi
-* Ödeme entegrasyonu
-* Ürün fotoğrafları için **responsive varyantlar**
-* Admin paneli için ek API’ler
+* Rol bazlı yetkilendirme kurallarının uygulanması
+* Ödeme sistemleri entegrasyonu
+* Ürün fotoğrafları için responsive varyant desteği
+* Yönetim paneline özel API’ler
 
 ---
 
+## 📜 Lisans
+
+Bu proje **MIT Lisansı** ile lisanslanmıştır.
