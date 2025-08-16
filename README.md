@@ -231,6 +231,4 @@ GET /api/products?category_id=2&min_price=100&max_price=500&sort=price_asc
 
 ---
 
-## 📜 Lisans
 
-Bu proje **MIT Lisansı** ile lisanslanmıştır.
