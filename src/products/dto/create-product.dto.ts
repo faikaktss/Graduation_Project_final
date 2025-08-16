@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber, IsOptional ,IsInt ,Min} from "class-validator";
 
 export class CreateProductDto {
     @IsNumber()
@@ -10,7 +10,7 @@ export class CreateProductDto {
 
     @IsString()
     @IsNotEmpty()
-    slug: string; // İleride otomatik üretilebilir
+    slug: string; 
 
     @IsString()
     @IsOptional()
@@ -24,7 +24,11 @@ export class CreateProductDto {
     price: number;
 
     @IsString()
-    @IsOptional() // Fotoğraflar servisi ilk primary'yi set ettiği için opsiyonel
+    @IsOptional() 
     primaryPhotoUrl?: string;
+
+    @IsInt()
+    @Min(0)
+    stockQuantity:number;
 }
 
