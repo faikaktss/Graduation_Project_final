@@ -228,7 +228,6 @@ GET /api/products?category_id=2&min_price=100&max_price=500&sort=price_asc
 * Ödeme sistemleri entegrasyonu
 * Ürün fotoğrafları için responsive varyant desteği
 * Yönetim paneline özel API’ler
-
----
+----
 
 
