@@ -37,7 +37,7 @@ Projenin amacı, adım adım geliştirilip büyütülebilecek bir altyapı sunar
 1. **Depoyu klonlayın:**
 
    ```bash
-   git clone https://github.com/kullanici/ecommerce-backend.git
+   git clone https://github.com/faikaktss/ecommerce-backend.git
    cd ecommerce-backend
    ```
 
